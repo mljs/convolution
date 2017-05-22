@@ -4,13 +4,18 @@
   [![build status][travis-image]][travis-url]
   [![npm download][download-image]][download-url]
 
-Convolution using the FFT or standard algorithm.
+Convolution using the FFT or direct algorithm.
 
 ## Installation
 
 `$ npm install --save ml-convolution`
 
 ## Usage
+
+Both FFT and direct convolution require two arguments: the input data to convolute and the convolution kernel.  
+The return value is an array of length `input.length + kernel.length - 1`.
+
+### Direct convolution
 
 ```js
 import {directConvolution} from 'ml-convolution';
@@ -22,7 +27,20 @@ const output = directConvolution(input, kernel);
 // [0, -1, -1, -2, 1, -3]
 ```
 
-## [API Documentation](https://mljs.github.io/convolution/)
+This function has an optional third parameter. You can pass an existing output array for better performance if
+you need to convolute many times.
+
+### FFT convolution
+
+```js
+import {fftConvolution} from 'ml-convolution';
+
+const input = [0, 1, 2, 3];
+const kernel = [-1, 1, -1];
+
+const output = fftConvolution(input, kernel);
+// [0, -1, -1, -2, 1, -3]
+```
 
 ### Benchmark
 
