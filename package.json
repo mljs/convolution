@@ -38,5 +38,9 @@
     "jest": "^20.0.3",
     "npm-run-all": "^4.0.2",
     "rollup": "^0.41.6"
+  },
+  "dependencies": {
+    "fft.js": "^4.0.3",
+    "next-power-of-two": "^1.0.0"
   }
 }
