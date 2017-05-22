@@ -13,12 +13,12 @@ Convolution using the FFT or standard algorithm.
 ## Usage
 
 ```js
-import convolution from 'ml-convolution';
+import {directConvolution} from 'ml-convolution';
 
 const input = [0, 1, 2, 3];
 const kernel = [-1, 1, -1];
 
-const output = convolution(input, kernel);
+const output = directConvolution(input, kernel);
 // [0, -1, -1, -2, 1, -3]
 ```
 
