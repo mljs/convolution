@@ -7,7 +7,7 @@ const {
 
 const tests = {
     data: [128, 512, 2048, 4096, 16384, 65536, 262144, 1048576],
-    kernel: [4, 16, 32, 128, 512, 1024]
+    kernel: [16, 32, 128, 512, 1024]
 };
 
 function test(dataLength, kernelLength) {
