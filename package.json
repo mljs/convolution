@@ -30,16 +30,16 @@
     "testEnvironment": "node"
   },
   "devDependencies": {
-    "babel-jest": "^20.0.3",
+    "babel-jest": "^24.6.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.24.1",
     "eslint": "^5.16.0",
     "eslint-config-cheminfo": "^1.20.1",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jest": "^22.4.1",
-    "eslint-plugin-no-only-tests": "^1.1.0",
-    "jest": "^20.0.3",
+    "eslint-plugin-no-only-tests": "^2.1.0",
+    "jest": "^24.6.0",
     "npm-run-all": "^4.0.2",
-    "rollup": "^0.41.6"
+    "rollup": "^1.8.0"
   },
   "dependencies": {
     "fft.js": "^4.0.3",
