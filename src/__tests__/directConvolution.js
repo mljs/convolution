@@ -27,8 +27,8 @@ describe('direct convolution', () => {
   });
 
   it('asymetric kernel', () => {
-    const result = directConvolution([2, 4, 2], [-1, 0, 1]);
-    expect(result).toStrictEqual([4, 0, -4]);
+    const result = directConvolution([1, 2, 3, 4], [-2, 0, 1]);
+    expect(result).toStrictEqual([2, 1, 0, -6]);
   });
 
   it('cut border', () => {

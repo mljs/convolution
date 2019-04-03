@@ -1,3 +1,5 @@
+import { checkKernel } from './utils';
+
 export default function directConvolution(
   input,
   kernel,
@@ -19,12 +21,12 @@ export default function directConvolution(
 }
 
 function convolutionBorderCut(input, kernel, output) {
-  const offset = (kernel.length - 1) / 2;
-  const doubleOffset = 2 * offset;
+  const kernelOffset = (kernel.length - 1) / 2;
+  const doubleOffset = 2 * kernelOffset;
   output = getOutput(output, input.length - doubleOffset);
 
-  for (var i = offset; i < input.length - offset; i++) {
-    const idx = i - offset;
+  for (var i = kernelOffset; i < input.length - kernelOffset; i++) {
+    const idx = i - kernelOffset;
     for (var j = 0; j < kernel.length; j++) {
       output[idx] += input[idx + j] * kernel[j];
     }
@@ -32,14 +34,9 @@ function convolutionBorderCut(input, kernel, output) {
   return output;
 }
 
-function checkKernel(kernel) {
-  if (kernel.length < 0 || kernel.length % 2 !== 1) {
-    throw new Error('kernel should be an odd positive integer');
-  }
-}
-
 function convolutionBorder0(input, kernel, output) {
   output = getOutput(output, input.length);
+
   const offset = (kernel.length - 1) / 2;
   for (var i = 0; i < input.length; i++) {
     const off = i - offset;
