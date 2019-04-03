@@ -1,6 +1,6 @@
 {
   "name": "ml-convolution",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Convolution using the FFT or standard algorithm",
   "main": "lib/index.js",
   "module": "src/index.js",
