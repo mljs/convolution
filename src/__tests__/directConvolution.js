@@ -37,5 +37,12 @@ describe('direct convolution', () => {
 
     result = directConvolution([2, 4, 2], [2], 'CUT');
     expect(result).toStrictEqual([4, 8, 4]);
+
+    result = directConvolution(
+      [0, 255, 255, 255, 255, 0, 0, 0],
+      [0.1, 0.2, 0.3],
+      'CUT'
+    );
+    expect(result).toStrictEqual([127.5, 153, 153, 76.5, 25.5, 0]);
   });
 });

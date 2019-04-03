@@ -22,11 +22,11 @@ function convolutionBorderCut(input, kernel, output) {
   const offset = (kernel.length - 1) / 2;
   const doubleOffset = 2 * offset;
   output = getOutput(output, input.length - doubleOffset);
-  const end = input.length - doubleOffset;
-  for (var i = 0; i < end; i++) {
-    const off = i + doubleOffset;
+
+  for (var i = offset; i < input.length - offset; i++) {
+    const idx = i - offset;
     for (var j = 0; j < kernel.length; j++) {
-      output[i] += input[off - j] * kernel[j];
+      output[idx] += input[idx + j] * kernel[j];
     }
   }
   return output;
