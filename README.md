@@ -1,8 +1,8 @@
 # convolution
 
-  [![NPM version][npm-image]][npm-url]
-  [![build status][travis-image]][travis-url]
-  [![npm download][download-image]][download-url]
+[![NPM version][npm-image]][npm-url]
+[![build status][travis-image]][travis-url]
+[![npm download][download-image]][download-url]
 
 Convolution using the FFT or direct algorithm.
 
@@ -18,7 +18,7 @@ The return value is an array of length `input.length + kernel.length - 1`.
 ### Direct convolution
 
 ```js
-import {directConvolution} from 'ml-convolution';
+import { directConvolution } from 'ml-convolution';
 
 const input = [0, 1, 2, 3];
 const kernel = [-1, 1, -1];
@@ -33,7 +33,7 @@ you need to convolute many times.
 ### FFT convolution
 
 ```js
-import {fftConvolution} from 'ml-convolution';
+import { fftConvolution } from 'ml-convolution';
 
 const input = [0, 1, 2, 3];
 const kernel = [-1, 1, -1];
@@ -48,51 +48,60 @@ With small kernels, direct convolution is usually faster:
 Current results suggest that from a kernel size of 512, fft convolution should be used.
 
 | Data x Kernel | fft [ops/s] | direct [ops/s] |
-| ------------- | --- | ------ |
-| 128 x 16 | 17640 | 256329 |
-| 128 x 32 | 17590 | 138211 |
-| 128 x 128 | 17295 | 35486 |
-| 128 x 512 | 4515 | 9308 |
-| 128 x 1024 | 2157 | 4695 |
-| 512 x 16 | 4527 | 66017 |
-| 512 x 32 | 4556 | 35356 |
-| 512 x 128 | 3848 | 8134 |
-| 512 x 512 | 3217 | 2311 |
-| 512 x 1024 | 2079 | 1072 |
-| 2048 x 16 | 681 | 15864 |
-| 2048 x 32 | 977 | 8749 |
-| 2048 x 128 | 1098 | 2164 |
-| 2048 x 512 | 1089 | 591 |
-| 2048 x 1024 | 1088 | 298 |
-| 4096 x 16 | 473 | 8082 |
-| 4096 x 32 | 404 | 4272 |
-| 4096 x 128 | 489 | 1128 |
-| 4096 x 512 | 510 | 296 |
-| 4096 x 1024 | 506 | 149 |
-| 16384 x 16 | 80 | 2112 |
-| 16384 x 32 | 72 | 1107 |
-| 16384 x 128 | 78 | 282 |
-| 16384 x 512 | 79 | 74 |
-| 16384 x 1024 | 77 | 37 |
-| 65536 x 16 | 18 | 491 |
-| 65536 x 32 | 18 | 270 |
-| 65536 x 128 | 18 | 70 |
-| 65536 x 512 | 17 | 18 |
-| 65536 x 1024 | 19 | 9 |
-| 262144 x 16 | 4 | 125 |
-| 262144 x 32 | 4 | 67 |
-| 262144 x 128 | 4 | 17 |
-| 262144 x 512 | 4 | 5 |
-| 262144 x 1024 | 4 | 2 |
-| 1048576 x 16 | 1 | 31 |
-| 1048576 x 32 | 1 | 15 |
-| 1048576 x 128 | 1 | 4 |
-| 1048576 x 512 | 1 | 1 |
-| 1048576 x 1024 | 1 | 1 |
+| ------------- | ----------- | -------------- |
+| 128 x 5       | 33816       | 406057         |
+| 128 x 11      | 34971       | 223050         |
+| 128 x 17      | 34223       | 141147         |
+| 128 x 33      | 32772       | 84932          |
+| 128 x 129     | 26426       | 26320          |
+| 128 x 513     | 6208        | 6967           |
+| 128 x 1025    | 2710        | 3495           |
+| 512 x 5       | 8425        | 103277         |
+| 512 x 11      | 8400        | 55776          |
+| 512 x 17      | 8376        | 35041          |
+| 512 x 33      | 8276        | 19538          |
+| 512 x 129     | 7471        | 6528           |
+| 512 x 513     | 6354        | 1728           |
+| 512 x 1025    | 2743        | 872            |
+| 2048 x 5      | 1945        | 24620          |
+| 2048 x 11     | 1940        | 13495          |
+| 2048 x 17     | 1934        | 8564           |
+| 2048 x 33     | 1915        | 5265           |
+| 2048 x 129    | 1906        | 1624           |
+| 2048 x 513    | 1742        | 421            |
+| 2048 x 1025   | 1594        | 150            |
+| 4096 x 5      | 519         | 7896           |
+| 4096 x 11     | 535         | 5827           |
+| 4096 x 17     | 701         | 3694           |
+| 4096 x 33     | 545         | 2671           |
+| 4096 x 129    | 777         | 816            |
+| 4096 x 513    | 768         | 215            |
+| 4096 x 1025   | 747         | 109            |
+| 16384 x 5     | 138         | 3071           |
+| 16384 x 11    | 144         | 1703           |
+| 16384 x 17    | 143         | 1083           |
+| 16384 x 33    | 144         | 669            |
+| 16384 x 129   | 144         | 204            |
+| 16384 x 513   | 142         | 53             |
+| 16384 x 1025  | 141         | 27             |
+| 65536 x 5     | 27          | 658            |
+| 65536 x 11    | 27          | 400            |
+| 65536 x 17    | 26          | 261            |
+| 65536 x 33    | 27          | 160            |
+| 65536 x 129   | 26          | 49             |
+| 65536 x 513   | 24          | 13             |
+| 65536 x 1025  | 28          | 7              |
+| 262144 x 5    | 4           | 112            |
+| 262144 x 11   | 4           | 76             |
+| 262144 x 17   | 4           | 55             |
+| 262144 x 33   | 4           | 36             |
+| 262144 x 129  | 4           | 12             |
+| 262144 x 513  | 4           | 3              |
+| 262144 x 1025 | 4           | 2              |
 
 ## License
 
-  [MIT](./LICENSE)
+[MIT](./LICENSE)
 
 [npm-image]: https://img.shields.io/npm/v/ml-convolution.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/ml-convolution
