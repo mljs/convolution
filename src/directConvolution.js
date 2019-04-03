@@ -62,12 +62,6 @@ function getOutput(output, len) {
   return output;
 }
 
-// function interpolateBorder(idx, len) {
-//   if (idx < 0) return 0;
-//   else if (idx >= len) return len - 1;
-//   return idx;
-// }
-
 function interpolateInput(input, idx) {
   if (idx < 0) return 0;
   else if (idx >= input.length) return 0;

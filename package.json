@@ -4,6 +4,7 @@
   "description": "Convolution using the FFT or standard algorithm",
   "main": "lib/index.js",
   "module": "src/index.js",
+  "types": "./ml-convolution.d.ts",
   "files": [
     "lib",
     "src"

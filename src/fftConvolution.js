@@ -7,7 +7,11 @@ export default function fftConvolution(input, kernel) {
 
   const fft = new FFT(fftLength);
 
-  const { output: fftKernel, input: result } = createPaddedFFt(kernel, fft, fftLength);
+  const { output: fftKernel, input: result } = createPaddedFFt(
+    kernel,
+    fft,
+    fftLength
+  );
   const { output: fftInput } = createPaddedFFt(input, fft, fftLength);
 
   // reuse arrays
@@ -15,7 +19,8 @@ export default function fftConvolution(input, kernel) {
   const conv = fftKernel;
   for (var i = 0; i < fftConv.length; i += 2) {
     const tmp = fftInput[i] * fftKernel[i] - fftInput[i + 1] * fftKernel[i + 1];
-    fftConv[i + 1] = fftInput[i] * fftKernel[i + 1] + fftInput[i + 1] * fftKernel[i];
+    fftConv[i + 1] =
+      fftInput[i] * fftKernel[i + 1] + fftInput[i + 1] * fftKernel[i];
     fftConv[i] = tmp;
   }
   fft.inverseTransform(conv, fftConv);
@@ -23,13 +28,13 @@ export default function fftConvolution(input, kernel) {
 }
 
 function createPaddedFFt(data, fft, length) {
-  const input = new Array(length);
+  const input = [];
   var i = 0;
   for (; i < data.length; i++) {
-    input[i] = data[i];
+    input.push(data[i]);
   }
-  for (;i < length; i++) {
-    input[i] = 0;
+  for (; i < length; i++) {
+    input.push(0);
   }
   const fftInput = fft.toComplexArray(input);
   const output = fft.createComplexArray();
