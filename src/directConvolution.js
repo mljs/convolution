@@ -15,7 +15,7 @@ export default function directConvolution(
       return convolutionBorderCut(input, kernel, output);
     }
     default: {
-      throw new Error(`unexpected border type ${borderType}`);
+      throw new Error(`unexpected border type: ${borderType}`);
     }
   }
 }

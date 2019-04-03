@@ -11,6 +11,7 @@ declare module 'ml-convolution' {
   ): T;
   export function fftConvolution(
     input: ArrayLike<number>,
-    kernel: ArrayLike<number>
+    kernel: ArrayLike<number>,
+    borderType?: BorderType
   ): number[];
 }

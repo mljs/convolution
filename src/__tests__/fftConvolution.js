@@ -34,6 +34,18 @@ describe('fft convolution', () => {
     );
     checkClose(result, [127.5, 153, 153, 76.5, 25.5, 0]);
   });
+
+  it('throws on invalid kernel', () => {
+    expect(() => fftConvolution([1], [1, 1])).toThrow(
+      /kernel should have an odd length/
+    );
+  });
+
+  it('throws on invalid border type', () => {
+    expect(() => fftConvolution([1], [1], 'XXX')).toThrow(
+      /unexpected border type: XXX/
+    );
+  });
 });
 
 function checkClose(result, expected) {

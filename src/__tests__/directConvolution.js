@@ -45,4 +45,22 @@ describe('direct convolution', () => {
     );
     expect(result).toStrictEqual([127.5, 153, 153, 76.5, 25.5, 0]);
   });
+
+  it('throws on invalid kernel', () => {
+    expect(() => directConvolution([1], [1, 1])).toThrow(
+      /kernel should have an odd length/
+    );
+  });
+
+  it('throws on invalid border type', () => {
+    expect(() => directConvolution([1], [1], 'XXX')).toThrow(
+      /unexpected border type: XXX/
+    );
+  });
+
+  it('throws on invalid output', () => {
+    expect(() => directConvolution([1], [1], 'CUT', new Array(2))).toThrow(
+      /expected length of 1 in output/
+    );
+  });
 });

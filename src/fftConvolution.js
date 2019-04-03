@@ -13,7 +13,7 @@ export default function fftConvolution(input, kernel, borderType = 'CONSTANT') {
       return fftConvolutionImpl(input, kernel, true);
     }
     default: {
-      throw new Error(`unexpected border type ${borderType}`);
+      throw new Error(`unexpected border type: ${borderType}`);
     }
   }
 }
