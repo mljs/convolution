@@ -1,6 +1,6 @@
 'use strict';
 
-const { fftConvolution, directConvolution } = require('..');
+const { FFTConvolution, directConvolution } = require('..');
 
 const tests = {
   data: [128, 512, 2048, 4096, 16384, 65536, 262144, 1048576],
@@ -10,6 +10,11 @@ const tests = {
 function test(dataLength, kernelLength) {
   const data = Array.from({ length: dataLength }, Math.random);
   const kernel = Array.from({ length: kernelLength }, Math.random);
+
+  const fft = new FFTConvolution(dataLength, kernel);
+  const fftConvolution = (data) => {
+    return fft.convolute(data);
+  };
 
   const fftResult = measure(data, kernel, fftConvolution);
   const directResult = measure(data, kernel, directConvolution);

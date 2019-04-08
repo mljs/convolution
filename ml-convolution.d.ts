@@ -14,4 +14,11 @@ declare module 'ml-convolution' {
     kernel: ArrayLike<number>,
     borderType?: BorderType
   ): number[];
+  export class FFTConvolution {
+    public constructor(size: number, kernel: ArrayLike<number>);
+    public convolute(
+      input: ArrayLike<number>,
+      borderType?: BorderType
+    ): number[];
+  }
 }
