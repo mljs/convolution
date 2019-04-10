@@ -46,8 +46,10 @@ import { DirectConvolution, FFTConvolution } from 'ml-convolution';
 // const input = [0, 255, 255, 255, 255, 0, 0, 0];
 const kernel = [0.1, 0.2, 0.3];
 
-// First parameter is the size of the inputs
+// First parameter is the size of the inputs and allows to pre-allocate an array with the correct size
 const direct = new DirectConvolution(8, kernel, 'CUT');
+
+// The convolve function mutates the same array at each execution
 direct.convolve([0, 255, 255, 255, 255, 0, 0, 0]); // [ 127.5, 153, 153, 76.5, 25.5, 0 ]
 direct.convolve([255, 0, 0, 255, 255, 255, 0, 0]); // [ 25.5, 76.5, 127.5, 153, 76.5, 25.5 ]
 
