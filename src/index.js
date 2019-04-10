@@ -1,4 +1,4 @@
-export { default as directConvolution } from './directConvolution';
+export * from './directConvolution';
 export * from './fftConvolution';
 
 export const BorderType = {

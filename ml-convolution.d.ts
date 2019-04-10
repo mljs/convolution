@@ -3,22 +3,30 @@ declare module 'ml-convolution' {
     CONSTANT = 'CONSTANT',
     CUT = 'CUT'
   }
-  export function directConvolution<T = number[]>(
+  export function directConvolution(
     input: ArrayLike<number>,
     kernel: ArrayLike<number>,
-    borderType?: BorderType,
-    output?: T
-  ): T;
+    borderType?: BorderType
+  ): number[];
+  export class DirectConvolution {
+    public constructor(
+      size: number,
+      kernel: ArrayLike<number>,
+      borderType?: BorderType
+    );
+    public convolve(input: ArrayLike<number>): number[];
+  }
   export function fftConvolution(
     input: ArrayLike<number>,
     kernel: ArrayLike<number>,
     borderType?: BorderType
   ): number[];
   export class FFTConvolution {
-    public constructor(size: number, kernel: ArrayLike<number>);
-    public convolute(
-      input: ArrayLike<number>,
+    public constructor(
+      size: number,
+      kernel: ArrayLike<number>,
       borderType?: BorderType
-    ): number[];
+    );
+    public convolve(input: ArrayLike<number>): number[];
   }
 }

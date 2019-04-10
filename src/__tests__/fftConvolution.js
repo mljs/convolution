@@ -1,4 +1,4 @@
-import { fftConvolution } from '..';
+import { fftConvolution, FFTConvolution } from '..';
 
 /* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "checkClose"] }] */
 
@@ -37,13 +37,26 @@ describe('fft convolution', () => {
 
   it('throws on invalid kernel', () => {
     expect(() => fftConvolution([1], [1, 1])).toThrow(
-      /kernel should have an odd length/
+      /kernel must have an odd positive length. Got 2/
     );
   });
 
   it('throws on invalid border type', () => {
     expect(() => fftConvolution([1], [1], 'XXX')).toThrow(
       /unexpected border type: XXX/
+    );
+  });
+
+  it('throws on invalid size', () => {
+    expect(() => fftConvolution([], [1])).toThrow(
+      /size must be a positive integer. Got 0/
+    );
+  });
+
+  it('throws when input length does not match size', () => {
+    const fft = new FFTConvolution(1, [1]);
+    expect(() => fft.convolve([1, 2])).toThrow(
+      /input length \(2\) does not match setup size \(1\)/
     );
   });
 });

@@ -1,80 +1,65 @@
-import { checkKernel } from './utils';
+import {
+  checkSize,
+  checkKernel,
+  checkBorderType,
+  checkInputLength,
+  createArray
+} from './utils';
 
-export default function directConvolution(
-  input,
-  kernel,
-  borderType = 'CONSTANT',
-  output
-) {
-  checkKernel(kernel);
-  switch (borderType) {
-    case 'CONSTANT': {
-      return convolutionBorder0(input, kernel, output);
+export class DirectConvolution {
+  constructor(size, kernel, borderType = 'CONSTANT') {
+    checkSize(size);
+    checkKernel(kernel);
+    checkBorderType(borderType);
+
+    this.size = size;
+    this.kernelOffset = (kernel.length - 1) / 2;
+    this.outputSize =
+      borderType === 'CONSTANT' ? size : size - 2 * this.kernelOffset;
+    this.output = createArray(this.outputSize);
+    this.kernel = kernel;
+    this.kernelSize = kernel.length;
+    this.borderType = borderType;
+  }
+
+  convolve(input) {
+    checkInputLength(input.length, this.size);
+    this.output.fill(0);
+    if (this.borderType === 'CONSTANT') {
+      this._convolutionBorder0(input);
+    } else {
+      this._convolutionBorderCut(input);
     }
-    case 'CUT': {
-      return convolutionBorderCut(input, kernel, output);
+    return this.output;
+  }
+
+  _convolutionBorder0(input) {
+    for (let i = 0; i < this.size; i++) {
+      for (let j = 0; j < this.kernelSize; j++) {
+        this.output[i] +=
+          interpolateInput(input, i - this.kernelOffset + j) * this.kernel[j];
+      }
     }
-    default: {
-      throw new Error(`unexpected border type: ${borderType}`);
+  }
+
+  _convolutionBorderCut(input) {
+    for (let i = this.kernelOffset; i < this.size - this.kernelOffset; i++) {
+      const index = i - this.kernelOffset;
+      for (let j = 0; j < this.kernelSize; j++) {
+        this.output[index] += input[index + j] * this.kernel[j];
+      }
     }
   }
 }
 
-function convolutionBorderCut(input, kernel, output) {
-  const kernelOffset = (kernel.length - 1) / 2;
-  const doubleOffset = 2 * kernelOffset;
-  output = getOutput(output, input.length - doubleOffset);
-
-  for (var i = kernelOffset; i < input.length - kernelOffset; i++) {
-    const idx = i - kernelOffset;
-    for (var j = 0; j < kernel.length; j++) {
-      output[idx] += input[idx + j] * kernel[j];
-    }
-  }
-  return output;
-}
-
-function convolutionBorder0(input, kernel, output) {
-  output = getOutput(output, input.length);
-
-  const offset = (kernel.length - 1) / 2;
-  for (var i = 0; i < input.length; i++) {
-    const off = i - offset;
-    for (var j = 0; j < kernel.length; j++) {
-      output[i] += interpolateInput(input, off + j) * kernel[j];
-    }
-  }
-  return output;
-}
-
-function getOutput(output, len) {
-  if (!output) {
-    output = createArray(len);
-  } else {
-    if (output.length !== len) {
-      throw new Error(`expected length of ${len} in output`);
-    }
-    fillArray(output);
-  }
-  return output;
+export function directConvolution(input, kernel, borderType) {
+  return new DirectConvolution(input.length, kernel, borderType).convolve(
+    input
+  );
 }
 
 function interpolateInput(input, idx) {
   if (idx < 0) return 0;
   else if (idx >= input.length) return 0;
   return input[idx];
-}
-
-function createArray(len) {
-  const array = [];
-  for (var i = 0; i < len; i++) {
-    array.push(0);
-  }
-  return array;
-}
-
-function fillArray(arr) {
-  for (let i = 0; i < arr.length; i++) {
-    arr[i] = 0;
-  }
 }

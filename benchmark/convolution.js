@@ -1,33 +1,39 @@
 'use strict';
 
-const { FFTConvolution, directConvolution } = require('..');
+const { FFTConvolution, DirectConvolution } = require('..');
 
 const tests = {
   data: [128, 512, 2048, 4096, 16384, 65536, 262144, 1048576],
-  kernel: [5, 11, 17, 33, 129, 513, 1025]
+  kernel: [5, 11, 17, 33, 65, 129, 513]
 };
 
+function createArray(length) {
+  const array = [];
+  for (let i = 0; i < length; i++) {
+    array.push(Math.random());
+  }
+  return array;
+}
+
 function test(dataLength, kernelLength) {
-  const data = Array.from({ length: dataLength }, Math.random);
-  const kernel = Array.from({ length: kernelLength }, Math.random);
+  const data = createArray(dataLength);
+  const kernel = createArray(kernelLength);
 
+  const direct = new DirectConvolution(dataLength, kernel);
   const fft = new FFTConvolution(dataLength, kernel);
-  const fftConvolution = (data) => {
-    return fft.convolute(data);
-  };
 
-  const fftResult = measure(data, kernel, fftConvolution);
-  const directResult = measure(data, kernel, directConvolution);
+  const fftResult = measure(data, fft);
+  const directResult = measure(data, direct);
 
   return { fftResult, directResult };
 }
 
-function measure(data, kernel, convolution) {
+function measure(data, convolution) {
   const start = Date.now();
   let shouldStop = false;
   let iterations = 0;
   while (!shouldStop) {
-    convolution(data, kernel);
+    convolution.convolve(data);
     iterations++;
     shouldStop = iterations >= 10 && Date.now() - start >= 1000;
   }

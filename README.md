@@ -8,96 +8,117 @@ Convolution using the FFT or direct algorithm.
 
 ## Installation
 
-`$ npm install --save ml-convolution`
+```console
+npm install ml-convolution
+```
 
 ## Usage
 
-Both FFT and direct convolution require two arguments: the input data to convolute and the convolution kernel.  
-The return value is an array of length `input.length + kernel.length - 1`.
-
-### Direct convolution
+### One execution
 
 ```js
-import { directConvolution } from 'ml-convolution';
+import { directConvolution, fftConvolution } from 'ml-convolution';
 
 const input = [0, 1, 2, 3];
 const kernel = [-1, 1, -1];
 
-const output = directConvolution(input, kernel);
-// [0, -1, -1, -2, 1, -3]
+const outputDirect = directConvolution(input, kernel); // [-1, -1, -2, 1]
+const outputFFT = fftConvolution(input, kernel); // [-1, -1, -2, 1]
 ```
 
-This function has an optional third parameter. You can pass an existing output array for better performance if
-you need to convolute many times.
-
-### FFT convolution
+The functions both take an optional third argument to determine the way borders
+are processed. The default value, `CONSTANT`, will consider that the values out
+of the bounds are all 0. If it is set to `CUT`, borders will be ignored and the
+result will be smaller than te input by `kernel.length - 1`:
 
 ```js
-import { fftConvolution } from 'ml-convolution';
+const outputDirect = directConvolution(input, kernel, 'CUT'); // [-1, -2]
+```
 
-const input = [0, 1, 2, 3];
-const kernel = [-1, 1, -1];
+### Optimized, multiple executions
 
-const output = fftConvolution(input, kernel);
-// [0, -1, -1, -2, 1, -3]
+If you need to execute the convolution many times with the same kernel and input
+length, you should consider instead to use the class-based API:
+
+```js
+import { DirectConvolution, FFTConvolution } from 'ml-convolution';
+
+// const input = [0, 255, 255, 255, 255, 0, 0, 0];
+const kernel = [0.1, 0.2, 0.3];
+
+// First parameter is the size of the inputs
+const direct = new DirectConvolution(8, kernel, 'CUT');
+direct.convolve([0, 255, 255, 255, 255, 0, 0, 0]); // [ 127.5, 153, 153, 76.5, 25.5, 0 ]
+direct.convolve([255, 0, 0, 255, 255, 255, 0, 0]); // [ 25.5, 76.5, 127.5, 153, 76.5, 25.5 ]
+
+const fft = new FFTConvolution(8, kernel, 'CONSTANT');
+fft.convolve([0, 255, 255, 255, 255, 0, 0, 0]); // [ 76.5, 127.5, 153, 153, 76.5, 25.5, 0, 0 ]
+fft.convolve([255, 0, 0, 255, 255, 255, 0, 0]); // [ 51, 25.5, 76.5, 127.5, 153, 76.5, 25.5, 0 ]
 ```
 
 ### Benchmark
 
 With small kernels, direct convolution is usually faster:  
-Current results suggest that from a kernel size of 512, fft convolution should be used.
+Current results suggest that from a kernel size around 64, FFT convolution should be used.
 
 | Data x Kernel | fft [ops/s] | direct [ops/s] |
 | ------------- | ----------- | -------------- |
-| 128 x 5       | 33816       | 406057         |
-| 128 x 11      | 34971       | 223050         |
-| 128 x 17      | 34223       | 141147         |
-| 128 x 33      | 32772       | 84932          |
-| 128 x 129     | 26426       | 26320          |
-| 128 x 513     | 6208        | 6967           |
-| 128 x 1025    | 2710        | 3495           |
-| 512 x 5       | 8425        | 103277         |
-| 512 x 11      | 8400        | 55776          |
-| 512 x 17      | 8376        | 35041          |
-| 512 x 33      | 8276        | 19538          |
-| 512 x 129     | 7471        | 6528           |
-| 512 x 513     | 6354        | 1728           |
-| 512 x 1025    | 2743        | 872            |
-| 2048 x 5      | 1945        | 24620          |
-| 2048 x 11     | 1940        | 13495          |
-| 2048 x 17     | 1934        | 8564           |
-| 2048 x 33     | 1915        | 5265           |
-| 2048 x 129    | 1906        | 1624           |
-| 2048 x 513    | 1742        | 421            |
-| 2048 x 1025   | 1594        | 150            |
-| 4096 x 5      | 519         | 7896           |
-| 4096 x 11     | 535         | 5827           |
-| 4096 x 17     | 701         | 3694           |
-| 4096 x 33     | 545         | 2671           |
-| 4096 x 129    | 777         | 816            |
-| 4096 x 513    | 768         | 215            |
-| 4096 x 1025   | 747         | 109            |
-| 16384 x 5     | 138         | 3071           |
-| 16384 x 11    | 144         | 1703           |
-| 16384 x 17    | 143         | 1083           |
-| 16384 x 33    | 144         | 669            |
-| 16384 x 129   | 144         | 204            |
-| 16384 x 513   | 142         | 53             |
-| 16384 x 1025  | 141         | 27             |
-| 65536 x 5     | 27          | 658            |
-| 65536 x 11    | 27          | 400            |
-| 65536 x 17    | 26          | 261            |
-| 65536 x 33    | 27          | 160            |
-| 65536 x 129   | 26          | 49             |
-| 65536 x 513   | 24          | 13             |
-| 65536 x 1025  | 28          | 7              |
-| 262144 x 5    | 4           | 112            |
-| 262144 x 11   | 4           | 76             |
-| 262144 x 17   | 4           | 55             |
-| 262144 x 33   | 4           | 36             |
-| 262144 x 129  | 4           | 12             |
-| 262144 x 513  | 4           | 3              |
-| 262144 x 1025 | 4           | 2              |
+| 128 x 5       | 97889       | 569110         |
+| 128 x 11      | 99403       | 280271         |
+| 128 x 17      | 97686       | 181608         |
+| 128 x 33      | 94633       | 93847          |
+| 128 x 65      | 96585       | 49320          |
+| 128 x 129     | 97189       | 25346          |
+| 128 x 513     | 21771       | 6469           |
+| 512 x 5       | 20712       | 144025         |
+| 512 x 11      | 21134       | 73189          |
+| 512 x 17      | 21201       | 44320          |
+| 512 x 33      | 21037       | 23591          |
+| 512 x 65      | 21398       | 12405          |
+| 512 x 129     | 21514       | 6358           |
+| 512 x 513     | 21494       | 1618           |
+| 2048 x 5      | 4746        | 36360          |
+| 2048 x 11     | 4740        | 18422          |
+| 2048 x 17     | 4735        | 11248          |
+| 2048 x 33     | 4689        | 5927           |
+| 2048 x 65     | 4740        | 3100           |
+| 2048 x 129    | 4741        | 1591           |
+| 2048 x 513    | 4753        | 405            |
+| 4096 x 5      | 2068        | 18201          |
+| 4096 x 11     | 2062        | 9241           |
+| 4096 x 17     | 2071        | 5629           |
+| 4096 x 33     | 2069        | 2976           |
+| 4096 x 65     | 2079        | 1551           |
+| 4096 x 129    | 2074        | 797            |
+| 4096 x 513    | 2079        | 203            |
+| 16384 x 5     | 370         | 4036           |
+| 16384 x 11    | 371         | 2295           |
+| 16384 x 17    | 377         | 1390           |
+| 16384 x 33    | 374         | 748            |
+| 16384 x 65    | 370         | 389            |
+| 16384 x 129   | 375         | 199            |
+| 16384 x 513   | 376         | 51             |
+| 65536 x 5     | 70          | 991            |
+| 65536 x 11    | 70          | 541            |
+| 65536 x 17    | 70          | 351            |
+| 65536 x 33    | 69          | 186            |
+| 65536 x 65    | 71          | 97             |
+| 65536 x 129   | 71          | 50             |
+| 65536 x 513   | 70          | 13             |
+| 262144 x 5    | 10          | 247            |
+| 262144 x 11   | 10          | 135            |
+| 262144 x 17   | 10          | 88             |
+| 262144 x 33   | 10          | 47             |
+| 262144 x 65   | 10          | 24             |
+| 262144 x 129  | 10          | 12             |
+| 262144 x 513  | 10          | 3              |
+| 1048576 x 5   | 2           | 60             |
+| 1048576 x 11  | 2           | 32             |
+| 1048576 x 17  | 2           | 22             |
+| 1048576 x 33  | 2           | 12             |
+| 1048576 x 65  | 2           | 6              |
+| 1048576 x 129 | 2           | 3              |
+| 1048576 x 513 | 2           | 1              |
 
 ## License
 

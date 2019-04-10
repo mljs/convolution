@@ -1,82 +1,81 @@
 import FFT from 'fft.js';
 import nextPOT from 'next-power-of-two';
 
-import { checkKernel } from './utils';
+import {
+  checkKernel,
+  checkSize,
+  checkBorderType,
+  checkInputLength,
+  createArray
+} from './utils';
 
 export class FFTConvolution {
-  constructor(size, kernel) {
-    if (!Number.isInteger(size) || size < 1) {
-      throw new TypeError('size must be a positive integer');
-    }
+  constructor(size, kernel, borderType = 'CONSTANT') {
+    checkSize(size);
     checkKernel(kernel);
+    checkBorderType(borderType);
+
+    this.size = size;
     this.kernelOffset = (kernel.length - 1) / 2;
     this.doubleOffset = 2 * this.kernelOffset;
+    this.borderType = borderType;
     const resultLength = size + this.doubleOffset;
     this.fftLength = nextPOT(Math.max(resultLength, 2));
+    this.fftComplexLength = this.fftLength * 2;
     this.fft = new FFT(this.fftLength);
+
     kernel = kernel.slice().reverse();
-    const { output: fftKernel, input: result } = createPaddedFFt(
-      kernel,
-      this.fft,
-      this.fftLength
-    );
-    this.fftKernel = fftKernel;
-    this.ifftOutput = this.fft.createComplexArray();
-    this.result = result;
+    const paddedKernel = createArray(this.fftComplexLength);
+    this.fftKernel = createArray(this.fftComplexLength);
+    pad(kernel, paddedKernel, this.fftComplexLength);
+    this.fft.transform(this.fftKernel, paddedKernel);
+
+    this.paddedInput = createArray(this.fftComplexLength);
+    this.fftInput = createArray(this.fftComplexLength);
+
+    this.ifftOutput = createArray(this.fftComplexLength);
+    this.result = paddedKernel;
   }
 
-  convolute(input, borderType = 'CONSTANT') {
-    // if (input.length) // TODO CHECK SIZE
-    const { output: fftInput } = createPaddedFFt(
-      input,
-      this.fft,
-      this.fftLength
-    );
+  convolve(input) {
+    checkInputLength(input.length, this.size);
+    pad(input, this.paddedInput, this.fftComplexLength);
+    this.fft.transform(this.fftInput, this.paddedInput);
 
-    for (var i = 0; i < fftInput.length; i += 2) {
+    for (var i = 0; i < this.fftInput.length; i += 2) {
       const tmp =
-        fftInput[i] * this.fftKernel[i] -
-        fftInput[i + 1] * this.fftKernel[i + 1];
-      fftInput[i + 1] =
-        fftInput[i] * this.fftKernel[i + 1] +
-        fftInput[i + 1] * this.fftKernel[i];
-      fftInput[i] = tmp;
+        this.fftInput[i] * this.fftKernel[i] -
+        this.fftInput[i + 1] * this.fftKernel[i + 1];
+      this.fftInput[i + 1] =
+        this.fftInput[i] * this.fftKernel[i + 1] +
+        this.fftInput[i + 1] * this.fftKernel[i];
+      this.fftInput[i] = tmp;
     }
 
-    this.fft.inverseTransform(this.ifftOutput, fftInput);
+    this.fft.inverseTransform(this.ifftOutput, this.fftInput);
     const r = this.fft.fromComplexArray(this.ifftOutput, this.result);
-    switch (borderType) {
-      case 'CONSTANT': {
-        return r.slice(this.kernelOffset, this.kernelOffset + input.length);
-      }
-      case 'CUT': {
-        return r.slice(this.doubleOffset, input.length);
-      }
-      default: {
-        throw new Error(`unexpected border type: ${borderType}`);
-      }
+    if (this.borderType === 'CONSTANT') {
+      return r.slice(this.kernelOffset, this.kernelOffset + input.length);
+    } else {
+      return r.slice(this.doubleOffset, input.length);
     }
   }
 }
 
-export function fftConvolution(input, kernel, borderType = 'CONSTANT') {
-  return new FFTConvolution(input.length, kernel).convolute(input, borderType);
+export function fftConvolution(input, kernel, borderType) {
+  return new FFTConvolution(input.length, kernel, borderType).convolve(input);
 }
 
-function createPaddedFFt(data, fft, length) {
-  const input = [];
+function pad(data, out, len) {
   let i = 0;
   for (; i < data.length; i++) {
-    input.push(data[i]);
+    out[i * 2] = data[i];
+    out[i * 2 + 1] = 0;
   }
-  for (; i < length; i++) {
-    input.push(0);
+
+  i *= 2;
+  for (; i < len; i += 2) {
+    out[i] = 0;
+    out[i + 1] = 0;
   }
-  const fftInput = fft.toComplexArray(input);
-  const output = fft.createComplexArray();
-  fft.transform(output, fftInput);
-  return {
-    output,
-    input
-  };
 }

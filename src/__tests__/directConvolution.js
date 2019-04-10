@@ -1,4 +1,4 @@
-import { directConvolution } from '..';
+import { directConvolution, DirectConvolution } from '..';
 
 describe('direct convolution', () => {
   it('with one value kernel', () => {
@@ -12,18 +12,6 @@ describe('direct convolution', () => {
     expect(directConvolution([0, 1, 2, 3], [1, 1, 1])).toStrictEqual([1, 3, 6, 5]);
     // prettier-ignore
     expect(directConvolution([0, 1, 2, 3], [-1, 1, -1])).toStrictEqual([-1, -1, -2, 1]);
-  });
-
-  it('with existing output array', () => {
-    const output = new Array(4);
-    const result = directConvolution(
-      [0, 1, 2, 3],
-      [-1, 1, -1],
-      'CONSTANT',
-      output
-    );
-    expect(result).toBe(output);
-    expect(output).toStrictEqual([-1, -1, -2, 1]);
   });
 
   it('asymetric kernel', () => {
@@ -48,7 +36,7 @@ describe('direct convolution', () => {
 
   it('throws on invalid kernel', () => {
     expect(() => directConvolution([1], [1, 1])).toThrow(
-      /kernel should have an odd length/
+      /kernel must have an odd positive length. Got 2/
     );
   });
 
@@ -58,9 +46,16 @@ describe('direct convolution', () => {
     );
   });
 
-  it('throws on invalid output', () => {
-    expect(() => directConvolution([1], [1], 'CUT', new Array(2))).toThrow(
-      /expected length of 1 in output/
+  it('throws on invalid size', () => {
+    expect(() => directConvolution([], [1])).toThrow(
+      /size must be a positive integer. Got 0/
+    );
+  });
+
+  it('throws when input length does not match size', () => {
+    const direct = new DirectConvolution(1, [1]);
+    expect(() => direct.convolve([1, 2])).toThrow(
+      /input length \(2\) does not match setup size \(1\)/
     );
   });
 });
