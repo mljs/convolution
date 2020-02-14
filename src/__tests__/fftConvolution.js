@@ -30,33 +30,33 @@ describe('fft convolution', () => {
     result = fftConvolution(
       [0, 255, 255, 255, 255, 0, 0, 0],
       [0.1, 0.2, 0.3],
-      'CUT'
+      'CUT',
     );
     checkClose(result, [127.5, 153, 153, 76.5, 25.5, 0]);
   });
 
   it('throws on invalid kernel', () => {
     expect(() => fftConvolution([1], [1, 1])).toThrow(
-      /kernel must have an odd positive length. Got 2/
+      /kernel must have an odd positive length. Got 2/,
     );
   });
 
   it('throws on invalid border type', () => {
     expect(() => fftConvolution([1], [1], 'XXX')).toThrow(
-      /unexpected border type: XXX/
+      /unexpected border type: XXX/,
     );
   });
 
   it('throws on invalid size', () => {
     expect(() => fftConvolution([], [1])).toThrow(
-      /size must be a positive integer. Got 0/
+      /size must be a positive integer. Got 0/,
     );
   });
 
   it('throws when input length does not match size', () => {
     const fft = new FFTConvolution(1, [1]);
     expect(() => fft.convolve([1, 2])).toThrow(
-      /input length \(2\) does not match setup size \(1\)/
+      /input length \(2\) does not match setup size \(1\)/,
     );
   });
 });

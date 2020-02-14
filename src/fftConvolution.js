@@ -6,7 +6,7 @@ import {
   checkSize,
   checkBorderType,
   checkInputLength,
-  createArray
+  createArray,
 } from './utils';
 
 export class FFTConvolution {
@@ -42,7 +42,7 @@ export class FFTConvolution {
     pad(input, this.paddedInput, this.fftComplexLength);
     this.fft.transform(this.fftInput, this.paddedInput);
 
-    for (var i = 0; i < this.fftInput.length; i += 2) {
+    for (let i = 0; i < this.fftInput.length; i += 2) {
       const tmp =
         this.fftInput[i] * this.fftKernel[i] -
         this.fftInput[i + 1] * this.fftKernel[i + 1];

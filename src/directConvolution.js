@@ -3,7 +3,7 @@ import {
   checkKernel,
   checkBorderType,
   checkInputLength,
-  createArray
+  createArray,
 } from './utils';
 
 export class DirectConvolution {
@@ -54,7 +54,7 @@ export class DirectConvolution {
 
 export function directConvolution(input, kernel, borderType) {
   return new DirectConvolution(input.length, kernel, borderType).convolve(
-    input
+    input,
   );
 }
 

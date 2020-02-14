@@ -7,7 +7,7 @@ export function checkSize(size) {
 export function checkKernel(kernel) {
   if (kernel.length === 0 || kernel.length % 2 !== 1) {
     throw new RangeError(
-      `kernel must have an odd positive length. Got ${kernel.length}`
+      `kernel must have an odd positive length. Got ${kernel.length}`,
     );
   }
 }
@@ -21,14 +21,14 @@ export function checkBorderType(borderType) {
 export function checkInputLength(actual, expected) {
   if (actual !== expected) {
     throw new RangeError(
-      `input length (${actual}) does not match setup size (${expected})`
+      `input length (${actual}) does not match setup size (${expected})`,
     );
   }
 }
 
 export function createArray(len) {
   const array = [];
-  for (var i = 0; i < len; i++) {
+  for (let i = 0; i < len; i++) {
     array.push(0);
   }
   return array;
