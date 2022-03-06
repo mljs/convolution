@@ -15,9 +15,10 @@
     "eslint": "eslint src",
     "eslint-fix": "npm run eslint -- --fix",
     "prepare": "rollup -c",
-    "test": "npm run test-coverage && npm run eslint",
-    "test-coverage": "jest --coverage",
-    "test-only": "jest"
+    "prettier": "prettier --check src",
+    "prettier-write": "prettier --write src",
+    "test": "npm run test-only && npm run eslint && npm run prettier",
+    "test-only": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -30,24 +31,17 @@
     "url": "https://github.com/mljs/convolution/issues"
   },
   "homepage": "https://github.com/mljs/convolution#readme",
-  "jest": {
-    "testEnvironment": "node"
-  },
   "devDependencies": {
-    "@babel/plugin-transform-modules-commonjs": "^7.8.3",
-    "cheminfo-build": "^1.0.5",
-    "eslint": "^6.8.0",
-    "eslint-config-cheminfo": "^2.0.4",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-jest": "^23.7.0",
-    "eslint-plugin-no-only-tests": "^2.4.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "jest": "^25.1.0",
-    "prettier": "^1.19.1",
-    "rollup": "^1.31.1"
+    "@babel/plugin-transform-modules-commonjs": "^7.16.8",
+    "cheminfo-build": "^1.1.11",
+    "eslint": "^8.10.0",
+    "eslint-config-cheminfo": "^7.2.2",
+    "jest": "^27.5.1",
+    "prettier": "^2.5.1",
+    "rollup": "^2.69.1"
   },
   "dependencies": {
-    "fft.js": "^4.0.3",
+    "fft.js": "^4.0.4",
     "next-power-of-two": "^1.0.0"
   }
 }

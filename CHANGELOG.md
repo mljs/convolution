@@ -1,3 +1,5 @@
+# Changelog
+
 # [2.0.0](https://github.com/mljs/convolution/compare/v1.0.2...v2.0.0) (2019-04-15)
 
 
