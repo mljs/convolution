@@ -4,7 +4,7 @@ const { FFTConvolution, DirectConvolution } = require('..');
 
 const tests = {
   data: [128, 512, 2048, 4096, 16384, 65536, 262144, 1048576],
-  kernel: [5, 11, 17, 33, 65, 129, 513]
+  kernel: [5, 11, 17, 33, 65, 129, 513],
 };
 
 function createArray(length) {
@@ -40,7 +40,7 @@ function measure(data, convolution) {
   const time = Date.now() - start;
   return {
     time,
-    iterations
+    iterations,
   };
 }
 
@@ -48,11 +48,14 @@ console.log('| Data x Kernel | fft [ops/s] | direct [ops/s] |');
 console.log('| ------------- | --- | ------ |');
 for (const dataLength of tests.data) {
   for (const kernelLength of tests.kernel) {
+    if (dataLength < kernelLength) {
+      continue;
+    }
     const result = test(dataLength, kernelLength);
     console.log(
       `| ${dataLength} x ${kernelLength} | ${formatResult(
-        result.fftResult
-      )} | ${formatResult(result.directResult)} |`
+        result.fftResult,
+      )} | ${formatResult(result.directResult)} |`,
     );
   }
 }
