@@ -1,6 +1,15 @@
 # Changelog
 
-# [2.0.0](https://github.com/mljs/convolution/compare/v1.0.2...v2.0.0) (2019-04-15)
+## [2.1.0](https://github.com/mljs/convolution/compare/v2.0.0...v2.1.0) (2023-05-12)
+
+
+### Features
+
+* add build script ([57ce125](https://github.com/mljs/convolution/commit/57ce125ebe89542508af35c86bd5f039a5751476))
+
+## Changelog
+
+## [2.0.0](https://github.com/mljs/convolution/compare/v1.0.2...v2.0.0) (2019-04-15)
 
 
 ### Bug Fixes
@@ -20,7 +29,7 @@
 
 
 <a name="0.2.0"></a>
-# [0.2.0](https://github.com/mljs/convolution/compare/v0.1.0...v0.2.0) (2017-05-22)
+## [0.2.0](https://github.com/mljs/convolution/compare/v0.1.0...v0.2.0) (2017-05-22)
 
 
 ### Features
@@ -30,7 +39,4 @@
 
 
 <a name="0.1.0"></a>
-# 0.1.0 (2017-05-22)
-
-
-
+## 0.1.0 (2017-05-22)
