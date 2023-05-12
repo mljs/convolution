@@ -1,7 +1,5 @@
 import { fftConvolution, FFTConvolution } from '..';
 
-/* eslint jest/expect-expect: ["error", { "assertFunctionNames": ["expect", "checkClose"] }] */
-
 describe('fft convolution', () => {
   it('fft with one value kernel', () => {
     expect(fftConvolution([0, 1, 2, 3], [0])).toStrictEqual([0, 0, 0, 0]);
